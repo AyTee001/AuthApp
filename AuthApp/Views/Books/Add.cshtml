@@ -1,0 +1,60 @@
+﻿@model AuthApp.Models.FormWithResultModel
+
+@{
+    <form asp-action="Add" asp-controller="Books" method="post" class="form">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="BookCreateDto.Title">Enter Title:</label>
+                        <input asp-for="BookCreateDto.Title" class="form-control" />
+                        <div class="text-danger">
+                            <span asp-validation-for="BookCreateDto.Title"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="BookCreateDto.Author">Enter Author Name:</label>
+                        <input asp-for="BookCreateDto.Author" class="form-control" />
+                        <div class="text-danger">
+                            <span asp-validation-for="BookCreateDto.Author"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="BookCreateDto.Year">Enter Year:</label>
+                        <input asp-for="BookCreateDto.Year" class="form-control" />
+                        <div class="text-danger">
+                            <span asp-validation-for="BookCreateDto.Year"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="BookCreateDto.Isbn">Enter ISBN:</label>
+                        <input asp-for="BookCreateDto.Isbn" class="form-control" />
+                        <div class="text-danger">
+                            <span asp-validation-for="BookCreateDto.Isbn"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 text-center">
+                    <button type="submit" class="btn btn-primary">Submit Form</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    @if (Model.Book is not null)
+    {
+        <div class="book-card">
+            <h3>@Model.Book.Title</h3>
+            <p>Id: @Model.Book.Id</p>
+            <p>Author: @Model.Book.Author</p>
+            <p>ISBN: @Model.Book.Isbn</p>
+            <p>Year: @Model.Book.Year</p>
+        </div>
+    }
+}

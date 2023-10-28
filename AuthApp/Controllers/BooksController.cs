@@ -1,32 +1,78 @@
-﻿using AuthApp.Models;
+﻿using AuthApp.Constants;
+using AuthApp.Data;
+using AuthApp.Models;
+using AuthApp.Models.DTO;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace AuthApp.Controllers
 {
+    [Authorize]
     public class BooksController : Controller
     {
-        private readonly ILogger<BooksController> _logger;
+        private readonly IBookService _bookService;
+        private readonly IMapper _mapper;
 
-        public BooksController(ILogger<BooksController> logger)
+        public BooksController(IBookService bookService, IMapper mapper)
         {
-            _logger = logger;
+            _bookService = bookService;
+            _mapper = mapper;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
-            return View();
+            return View(_bookService.GetBooks());
         }
 
-        public IActionResult Privacy()
+        [Authorize(Roles = nameof(Roles.Admin))]
+        [HttpGet]
+        public IActionResult Add()
         {
-            return View();
+            return View(new FormWithResultModel());
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [Authorize(Roles = nameof(Roles.Admin))]
+        [HttpPost]
+        public async Task<IActionResult> Add(FormWithResultModel form)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            if (ModelState.IsValid)
+            {
+                form.Book = await _bookService.CreateBookAsync(form.BookCreateDto);
+            }
+
+            return View("Add", form);
+        }
+
+        [Authorize(Roles = nameof(Roles.Admin))]
+        [HttpGet]
+        public IActionResult Edit(long id)
+        {
+            var book = _bookService.GetBookById(id);
+
+            return View(book);
+        }
+
+        [Authorize(Roles = nameof(Roles.Admin))]
+        [HttpPost]
+        public async Task<IActionResult> Edit(BookFullDto book)
+        {
+            if (ModelState.IsValid)
+            {
+                await _bookService.UpdateBookAsync(_mapper.Map<Book>(book));
+                return RedirectToAction("Index");
+            }
+            return View(book);
+        }
+
+        [Authorize(Roles = nameof(Roles.Admin))]
+        [HttpPost]
+        public async Task<IActionResult> Delete(BookFullDto book)
+        {
+            await _bookService.DeleteBookByIdAsync(book.Id);
+
+            return RedirectToAction("Index");
         }
     }
 }

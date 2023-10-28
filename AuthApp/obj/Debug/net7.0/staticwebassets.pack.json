@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\AuthApp.bundle.scp.css"
     },
     {
+      "Id": "D:\\Work\\AuthApp\\AuthApp\\wwwroot\\css\\book.css",
+      "PackagePath": "staticwebassets\\css\\book.css"
+    },
+    {
       "Id": "D:\\Work\\AuthApp\\AuthApp\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },

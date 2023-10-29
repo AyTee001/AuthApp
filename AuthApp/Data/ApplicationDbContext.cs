@@ -14,8 +14,10 @@ namespace AuthApp.Data
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            //Seeds books table
             builder.Seed();
 
+            //Ensures default tables provided by Identity are correctly constructed
             base.OnModelCreating(builder);
         }
     }

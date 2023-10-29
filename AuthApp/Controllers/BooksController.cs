@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AuthApp.Controllers
 {
+    /// <summary>
+    /// Controller for managing books. Requires authoriyation
+    /// </summary>
     [Authorize]
     public class BooksController : Controller
     {
@@ -20,12 +23,20 @@ namespace AuthApp.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Returns a view displaying a list of books.
+        /// </summary>
+        /// <returns>The view with the list of books.</returns>
         [HttpGet]
         public IActionResult Index()
         {
             return View(_bookService.GetBooks());
         }
 
+        /// <summary>
+        /// Returns a view for adding a new book.
+        /// </summary>
+        /// <returns>The view for adding a new book.</returns>
         [Authorize(Roles = nameof(Roles.Admin))]
         [HttpGet]
         public IActionResult Add()
@@ -33,6 +44,11 @@ namespace AuthApp.Controllers
             return View(new FormWithResultModel());
         }
 
+        /// <summary>
+        /// Processes the form submission to create a new book.
+        /// </summary>
+        /// <param name="form">The form data for creating a new book.</param>
+        /// <returns>If the form is valid, it adds a new book and redirects to the 'Add' view. If the form is invalid, it returns the 'Add' view with validation errors.</returns>
         [Authorize(Roles = nameof(Roles.Admin))]
         [HttpPost]
         public async Task<IActionResult> Add(FormWithResultModel form)
@@ -45,6 +61,10 @@ namespace AuthApp.Controllers
             return View("Add", form);
         }
 
+        /// <summary>
+        /// Returns a view for editing a book.
+        /// </summary>
+        /// <returns>The view for adding a new book with possibilities to either update or delete book.</returns>
         [Authorize(Roles = nameof(Roles.Admin))]
         [HttpGet]
         public IActionResult Edit(long id)
@@ -54,6 +74,11 @@ namespace AuthApp.Controllers
             return View(book);
         }
 
+        /// <summary>
+        /// Processes the form submission to update an existing book.
+        /// </summary>
+        /// <param name="book">The updated information for the book.</param>
+        /// <returns>If the form is valid, it updates the book and redirects to the 'Index' view. If the form is invalid, it returns the 'Edit' view with validation errors.</returns>
         [Authorize(Roles = nameof(Roles.Admin))]
         [HttpPost]
         public async Task<IActionResult> Edit(BookFullDto book)
@@ -66,6 +91,11 @@ namespace AuthApp.Controllers
             return View(book);
         }
 
+        /// <summary>
+        /// Deletes an existing book.
+        /// </summary>
+        /// <param name="book">The book to be deleted.</param>
+        /// <returns>Redirects to the 'Index' view after successful deletion.</returns>
         [Authorize(Roles = nameof(Roles.Admin))]
         [HttpPost]
         public async Task<IActionResult> Delete(BookFullDto book)

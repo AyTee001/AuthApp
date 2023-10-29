@@ -1,4 +1,5 @@
 using AuthApp.Data;
+using AuthApp.Extensions;
 using AuthApp.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,8 @@ namespace AuthApp
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
+
+            app.UseApplicationDbContext();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

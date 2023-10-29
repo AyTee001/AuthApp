@@ -6,6 +6,7 @@ namespace AuthApp.Services
 {
     public static class RoleSeeder
     {
+        //Seeds roles into db and creates one admin account
         public static async Task AddRolesAndDefaultAdmin(IServiceProvider services)
         {
             var userManager = services.GetRequiredService<UserManager<AppUser>>();

@@ -6,14 +6,21 @@ namespace AuthApp.Services
 {
     public static class RoleSeeder
     {
-        //Seeds roles into db and creates one admin account
+        // Seeds roles into db and creates one admin account
         public static async Task AddRolesAndDefaultAdmin(IServiceProvider services)
         {
             var userManager = services.GetRequiredService<UserManager<AppUser>>();
             var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-            await roleManager.CreateAsync(new IdentityRole(Roles.Admin.ToString()));
-            await roleManager.CreateAsync(new IdentityRole(Roles.User.ToString()));
+            if (!await roleManager.RoleExistsAsync(Roles.Admin.ToString()))
+            {
+                await roleManager.CreateAsync(new IdentityRole(Roles.Admin.ToString()));
+            }
+
+            if (!await roleManager.RoleExistsAsync(Roles.User.ToString()))
+            {
+                await roleManager.CreateAsync(new IdentityRole(Roles.User.ToString()));
+            }
 
             var user = new AppUser
             {
@@ -25,7 +32,7 @@ namespace AuthApp.Services
             };
 
             var userFromDb = await userManager.FindByEmailAsync(user.Email);
-            if(userFromDb == null)
+            if (userFromDb == null)
             {
                 await userManager.CreateAsync(user, "1234#Abcd");
                 await userManager.AddToRoleAsync(user, Roles.Admin.ToString());
